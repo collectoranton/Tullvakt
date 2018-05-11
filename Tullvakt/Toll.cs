@@ -19,9 +19,6 @@ namespace Tullvakt
             if (vehicle == null)
                 throw new ArgumentNullException(nameof(vehicle));
 
-            if (dateTime == null)
-                throw new ArgumentNullException(nameof(dateTime));
-
             if (vehicle.IsEcoFriendly)
                 return PriceForEcoVehicle;
 

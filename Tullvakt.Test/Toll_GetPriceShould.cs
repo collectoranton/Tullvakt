@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Tullvakt.Test
@@ -119,9 +118,9 @@ namespace Tullvakt.Test
         }
 
         [Fact]
-        public void ThrowExceptionsOnInvalidInputs()
+        public void ThrowArgumentNullExceptionOnNullInput()
         {
-
+            Assert.Throws<ArgumentNullException>(() => toll.GetPrice(null, DateTime.Now));
         }
     }
 }
