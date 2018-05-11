@@ -16,14 +16,18 @@ namespace Tullvakt
 
         public decimal GetPrice(Vehicle vehicle, DateTime dateTime)
         {
+            if (vehicle == null)
+                throw new ArgumentNullException(nameof(vehicle));
+
+            if (dateTime == null)
+                throw new ArgumentNullException(nameof(dateTime));
+
             if (vehicle.IsEcoFriendly)
                 return PriceForEcoVehicle;
 
             var price = GetBasePrice(vehicle);
 
-            price = AdjustForDateTime(price, dateTime);
-
-            return price;
+            return AdjustForDateTime(price, dateTime);
         }
 
         private decimal GetBasePrice(Vehicle vehicle)
@@ -39,31 +43,22 @@ namespace Tullvakt
             return price;
         }
 
-        private decimal AdjustForMotorcycle(decimal price)
-        {
-            return FactorForMotorcycle * price;
-        }
+        private decimal AdjustForMotorcycle(decimal price) => FactorForMotorcycle * price;
 
         private decimal AdjustForDateTime(decimal price, DateTime dateTime)
         {
             if (DateIsSwedishHoliday(dateTime))
-                AdjustForHoliday(price);
+                price = AdjustForHoliday(price);
 
             else if (TimeIsEvening(dateTime))
-                AdjustForEvening(price);
+                price = AdjustForEvening(price);
 
             return price;
         }
 
-        private decimal AdjustForEvening(decimal price)
-        {
-            return FactorForEvenings * price;
-        }
+        private decimal AdjustForEvening(decimal price) => FactorForEvenings * price;
 
-        private decimal AdjustForHoliday(decimal price)
-        {
-            return FactorForHolidays * price;
-        }
+        private decimal AdjustForHoliday(decimal price) => FactorForHolidays * price;
 
         private bool TimeIsEvening(DateTime dateTime)
         {
@@ -72,8 +67,7 @@ namespace Tullvakt
 
         private bool DateIsSwedishHoliday(DateTime dateTime)
         {
-            var swedishHoliday = new PublicHoliday.SwedenPublicHoliday();
-            return swedishHoliday.IsPublicHoliday(dateTime);
+            return new PublicHoliday.SwedenPublicHoliday().IsPublicHoliday(dateTime);
         }
     }
 }
