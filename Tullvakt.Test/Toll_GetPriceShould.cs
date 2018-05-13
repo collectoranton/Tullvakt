@@ -78,6 +78,46 @@ namespace Tullvakt.Test
             Assert.Equal(175m, toll.GetPrice(Motorcycle999kg, eveningLast));
         }
 
+        // Tillagd i efterhand
+        [Fact]
+        public void ReturnCorrectPriceForWeekend()
+        {
+            var dayFirst = new DateTime(2018, 5, 13, 6, 0, 0);           // 2018-05-13 06:00:00      (Regular Sunday)
+            var dayLast = new DateTime(2018, 5, 13, 17, 59, 59);         // 2018-05-13 17:59:59
+            var eveningFirst = new DateTime(2018, 5, 13, 18, 0, 0);      // 2018-05-13 18:00:00
+            var eveningLast = new DateTime(2018, 5, 13, 5, 59, 59);      // 2018-05-13 05:59:59
+
+            Assert.Equal(2000m, toll.GetPrice(Car1000kg, dayFirst));
+            Assert.Equal(2000m, toll.GetPrice(Car1000kg, dayLast));
+            Assert.Equal(2000m, toll.GetPrice(Car1000kg, eveningFirst));
+            Assert.Equal(2000m, toll.GetPrice(Car1000kg, eveningLast));
+
+            Assert.Equal(1000m, toll.GetPrice(Car999kg, dayFirst));
+            Assert.Equal(1000m, toll.GetPrice(Car999kg, dayLast));
+            Assert.Equal(1000m, toll.GetPrice(Car999kg, eveningFirst));
+            Assert.Equal(1000m, toll.GetPrice(Car999kg, eveningLast));
+
+            Assert.Equal(4000m, toll.GetPrice(Truck1000kg, dayFirst));
+            Assert.Equal(4000m, toll.GetPrice(Truck1000kg, dayLast));
+            Assert.Equal(4000m, toll.GetPrice(Truck1000kg, eveningFirst));
+            Assert.Equal(4000m, toll.GetPrice(Truck1000kg, eveningLast));
+
+            Assert.Equal(4000m, toll.GetPrice(Truck999kg, dayFirst));
+            Assert.Equal(4000m, toll.GetPrice(Truck999kg, dayLast));
+            Assert.Equal(4000m, toll.GetPrice(Truck999kg, eveningFirst));
+            Assert.Equal(4000m, toll.GetPrice(Truck999kg, eveningLast));
+
+            Assert.Equal(1400m, toll.GetPrice(Motorcycle1000kg, dayFirst));
+            Assert.Equal(1400m, toll.GetPrice(Motorcycle1000kg, dayLast));
+            Assert.Equal(1400m, toll.GetPrice(Motorcycle1000kg, eveningFirst));
+            Assert.Equal(1400m, toll.GetPrice(Motorcycle1000kg, eveningLast));
+
+            Assert.Equal(700m, toll.GetPrice(Motorcycle999kg, dayFirst));
+            Assert.Equal(700m, toll.GetPrice(Motorcycle999kg, dayLast));
+            Assert.Equal(700m, toll.GetPrice(Motorcycle999kg, eveningFirst));
+            Assert.Equal(700m, toll.GetPrice(Motorcycle999kg, eveningLast));
+        }
+
         [Fact]
         public void ReturnCorrectPriceForHoliday()
         {

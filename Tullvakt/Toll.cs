@@ -44,8 +44,8 @@ namespace Tullvakt
 
         private decimal AdjustForDateTime(decimal price, DateTime dateTime)
         {
-            if (DateIsSwedishHoliday(dateTime))
-                price = AdjustForHoliday(price);
+            if (DateIsWeekend(dateTime) || DateIsSwedishHoliday(dateTime))
+                price = AdjustForWeekendsAndHoliday(price);
 
             else if (TimeIsEvening(dateTime))
                 price = AdjustForEvening(price);
@@ -55,11 +55,17 @@ namespace Tullvakt
 
         private decimal AdjustForEvening(decimal price) => FactorForEvenings * price;
 
-        private decimal AdjustForHoliday(decimal price) => FactorForHolidays * price;
+        private decimal AdjustForWeekendsAndHoliday(decimal price) => FactorForHolidays * price;
 
         private bool TimeIsEvening(DateTime dateTime)
         {
             return dateTime.Hour >= EveningStartHour || dateTime.Hour < EveningEndHour;
+        }
+
+        // Tillagd i efterhand
+        private bool DateIsWeekend(DateTime dateTime)
+        {
+            return dateTime.DayOfWeek == DayOfWeek.Saturday || dateTime.DayOfWeek == DayOfWeek.Sunday;
         }
 
         private bool DateIsSwedishHoliday(DateTime dateTime)
