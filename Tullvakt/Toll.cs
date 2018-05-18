@@ -14,7 +14,7 @@ namespace Tullvakt
         private const int EveningStartHour = 18;
         private const int EveningEndHour = 6;
 
-        public decimal GetPrice(Vehicle vehicle, DateTime dateTime)
+        public decimal GetPrice(Vehicle vehicle, DateTime timeOfPass)
         {
             if (vehicle == null)
                 throw new ArgumentNullException(nameof(vehicle));
@@ -24,7 +24,7 @@ namespace Tullvakt
 
             var price = GetBasePrice(vehicle);
 
-            return AdjustForDateTime(price, dateTime);
+            return AdjustForDateTime(price, timeOfPass);
         }
 
         private decimal GetBasePrice(Vehicle vehicle)
@@ -32,7 +32,7 @@ namespace Tullvakt
             if (vehicle.Type == VehicleType.Truck)
                 return PriceForTrucks;
 
-            var price = vehicle.Weight < 1000 ? PriceBelow1000Kg : PriceFrom1000Kg;
+            var price = GetPriceBasedOnWeight(vehicle);
 
             if (vehicle.Type == VehicleType.Motorcycle)
                 price = AdjustForMotorcycle(price);
@@ -40,14 +40,19 @@ namespace Tullvakt
             return price;
         }
 
+        private decimal GetPriceBasedOnWeight(Vehicle vehicle)
+        {
+            return vehicle.Weight < 1000 ? PriceBelow1000Kg : PriceFrom1000Kg;
+        }
+
         private decimal AdjustForMotorcycle(decimal price) => FactorForMotorcycle * price;
 
-        private decimal AdjustForDateTime(decimal price, DateTime dateTime)
+        private decimal AdjustForDateTime(decimal price, DateTime timeOfPass)
         {
-            if (DateIsWeekend(dateTime) || DateIsSwedishHoliday(dateTime))
+            if (DateIsWeekend(timeOfPass) || DateIsSwedishHoliday(timeOfPass))
                 price = AdjustForWeekendsAndHoliday(price);
 
-            else if (TimeIsEvening(dateTime))
+            else if (TimeIsEvening(timeOfPass))
                 price = AdjustForEvening(price);
 
             return price;
@@ -57,20 +62,20 @@ namespace Tullvakt
 
         private decimal AdjustForWeekendsAndHoliday(decimal price) => FactorForHolidays * price;
 
-        private bool TimeIsEvening(DateTime dateTime)
+        private bool TimeIsEvening(DateTime timeOfPass)
         {
-            return dateTime.Hour >= EveningStartHour || dateTime.Hour < EveningEndHour;
+            return timeOfPass.Hour >= EveningStartHour || timeOfPass.Hour < EveningEndHour;
         }
 
         // Tillagd i efterhand
-        private bool DateIsWeekend(DateTime dateTime)
+        private bool DateIsWeekend(DateTime timeOfPass)
         {
-            return dateTime.DayOfWeek == DayOfWeek.Saturday || dateTime.DayOfWeek == DayOfWeek.Sunday;
+            return timeOfPass.DayOfWeek == DayOfWeek.Saturday || timeOfPass.DayOfWeek == DayOfWeek.Sunday;
         }
 
-        private bool DateIsSwedishHoliday(DateTime dateTime)
+        private bool DateIsSwedishHoliday(DateTime timeOfPass)
         {
-            return new PublicHoliday.SwedenPublicHoliday().IsPublicHoliday(dateTime);
+            return new PublicHoliday.SwedenPublicHoliday().IsPublicHoliday(timeOfPass);
         }
     }
 }

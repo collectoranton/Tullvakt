@@ -4,11 +4,11 @@ namespace Tullvakt
 {
     public class Vehicle
     {
-        public int Weight { get; set; }
-        public VehicleType Type { get; set; }
-        public bool IsEcoFriendly { get; set; }
+        public int Weight { get; }
+        public VehicleType Type { get; }
+        public bool IsEcoFriendly { get; }
 
-        public Vehicle(int weight, VehicleType type, bool isEcoFriendly)
+        public Vehicle(int weight, VehicleType type, bool isEcoFriendly = false)
         {
             if (weight < 1)
                 throw new ArgumentException("A vehicle must have weight", nameof(weight));

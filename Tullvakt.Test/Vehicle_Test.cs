@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Tullvakt.Test
 {
-    public class Vehicle_Should
+    public class Vehicle_Test
     {
         [Fact]
         public void ThrowArgumentExceptionOnInvalidWeight()
